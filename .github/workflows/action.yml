@@ -6,24 +6,48 @@ on:
 
 jobs:
 
-  deploy:
-    name: Deploy to Digital Ocean
-    runs-on: ubuntu-latest # select the vm to work on
+  build:
+    name: Build the dockerised apps
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: html
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
-      - name: log
-        shell: bash
-        env: 
-          super_secret: "hello"
-        run: echo $super_secret
-      - name: Deploy node app
-        uses: fifsky/ssh-action@master
-        with:
-          host: ${{secrets.SSH_HOST}}
-          key: ${{secrets.SSH_KEY}}
-          user: ${{secrets.SSH_USERNAME}}
-          command: | 
-            git clone https://github.com/too-old-to-code/nginx-play.git
+      - name: Build container
+        run: |
+          for foldername in $(ls)                  
+          do
+            ln -sf ../scripts/build.sh $foldername/build.sh
+          done
+      - run: |
+          for foldername in $(ls)
+          do
+            ./$foldername/build.sh
+          done
+
+
+
+
+  # deploy:
+  #   name: Deploy to Digital Ocean
+  #   runs-on: ubuntu-latest # select the vm to work on
+  #   steps:
+  #     - name: Checkout the repo
+  #       uses: actions/checkout@v3
+  #     - name: log
+  #       shell: bash
+  #       env: 
+  #         super_secret: "hello"
+  #       run: echo $super_secret
+  #     - name: Deploy node app
+  #       uses: fifsky/ssh-action@master
+  #       with:
+  #         host: ${{secrets.SSH_HOST}}
+  #         key: ${{secrets.SSH_KEY}}
+  #         user: ${{secrets.SSH_USERNAME}}
+  #         command: | 
+  #           git clone https://github.com/too-old-to-code/nginx-play.git
 
       
