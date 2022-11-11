@@ -1,21 +1,27 @@
 version: "3.9"
 services:
-  andy:
+  nxtjs:
     depends_on:
       - reverse-proxy
-    build: ./html/andy
-  ricky:
+    build: ./frontend-applications/nxtjs
+  basic:
     depends_on:
       - reverse-proxy
-    build: ./html/ricky
+    build: ./frontend-applications/basic
+  veet:
+    depends_on:
+      - reverse-proxy
+    build: ./frontend-applications/veet
+  cra:
+    depends_on:
+      - reverse-proxy
+    build: ./frontend-applications/cra
   default:
     depends_on:
       - reverse-proxy
-    build: ./html/default
+    build: ./frontend-applications/default
   reverse-proxy:
     restart: always
-    image: nginx:latest
-    volumes:
-    - ./conf.d:/etc/nginx/conf.d
+    build: .
     ports:
     - "80:80"
