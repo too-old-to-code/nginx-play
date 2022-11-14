@@ -1,5 +1,11 @@
 version: "3.9"
 services:
+  api:
+    depends_on:
+      - mongodb
+    build: ./server-applications/api
+    # ports:
+    #   - 3000:3000
   nxtjs:
     depends_on:
       - reverse-proxy
@@ -15,13 +21,21 @@ services:
   cra:
     depends_on:
       - reverse-proxy
-    build: ./frontend-applications/cra
+    build: 
+      context: ./frontend-applications/cra
+      args:
+        REACT_APP_URL: localhost
   default:
     depends_on:
       - reverse-proxy
     build: ./frontend-applications/default
+  mongodb:
+    image: mongo:latest
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: rootpassword
   reverse-proxy:
     restart: always
     build: .
     ports:
-    - "80:80"
+      - "80:80"

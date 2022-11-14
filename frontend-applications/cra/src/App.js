@@ -1,22 +1,39 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 
+console.log("ENV:  ", process.env)
 function App() {
+  const [customers, setCustomers] = useState([])
+  const [text, setText] = useState('No hope')
+
+  const handleGetCustomers = async () => {
+    const data = await fetch(`/api/customers`)
+    const c = await data.json()
+
+    console.log(c)
+    setCustomers(c)
+  }
+
+  const handleGetTest = async () => {
+    const data = await fetch('/api/other')
+    const c = await data.text()
+    setText(c)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button onClick={handleGetCustomers}>Get customers</button>
+        <ul>
+
+        {
+          customers.map((cus) => {
+            return <li>{cus.name}</li>
+          })
+        }
+        <button onClick={handleGetTest}>Change text</button>
+        <h1>{text}</h1>
+        </ul>
       </header>
     </div>
   );

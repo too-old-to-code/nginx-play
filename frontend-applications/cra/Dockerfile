@@ -1,5 +1,6 @@
 FROM node:14-alpine AS builder
 ENV NODE_ENV production
+
 # Add a work directory
 WORKDIR /app
 # Cache and Install dependencies
@@ -8,6 +9,8 @@ COPY package-lock.json .
 RUN npm install --production
 # Copy app files
 COPY . .
+
+ARG REACT_APP_URL ${REACT_APP_URL}
 # Build the app
 RUN npm run build
 
